@@ -27,7 +27,7 @@ bank_lm_predict = bank_lm.predict(valid_x)
 result = pd.DataFrame({'Predicted': bank_lm_predict, 'Actual': valid_y,
                        'Residual': valid_y - bank_lm_predict})
 
-print(result.head(20))
+print(result.head(25))
 
 #Regression statistics
 regressionSummary(valid_y, bank_lm_predict)
@@ -42,21 +42,6 @@ def score_model(model, variables):
     return AIC_score(train_y, model.predict
     (train_x[variables]), model)
 
-#transform categorical naar dummy variabele
-allVariables = train_x.columns
-results = exhaustive_search(allVariables, train_model, score_model)
-
-data = []
-for result in results:
-    model = result['model']
-    variables = result['variables']
-    AIC = AIC_score(train_y, model.predict(train_x[variables]), model)
-
-    d = {'n': result['n'], 'r2adj': -result['score'], 'AIC': AIC}
-    d.update({var: var in result['variables'] for var in allVariables})
-    data.append(d)
-
 best_model, best_variables = backward_elimination(train_x.columns,
                                                   train_model, score_model, verbose=True)
-
 print(best_variables)
