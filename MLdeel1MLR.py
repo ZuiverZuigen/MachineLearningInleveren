@@ -4,12 +4,13 @@ from sklearn.linear_model import LinearRegression
 
 import dmba
 from dmba import regressionSummary
+from dmba import backward_elimination
+from dmba import AIC_score
 
 #Select columns for regression analysis
 wine_df = dmba.load_data('Wine.csv')
 
-predictors = ['Type', 'Alcohol', 'Ash', 'Ash_Alcalinity', 'Magnesium', 'Total_Phenols',
-              'Flavanoids', 'Nonflavanoid_Phenols', 'Proanthocyanins', 'Color_Intensity', 'Hue', 'OD280_OD315', 'Proline']
+predictors = ['Nonflavanoid_Phenols', 'Hue']
 
 outcome = 'Malic_Acid'
 
@@ -31,3 +32,18 @@ print(result.head(20))
 
 #Regression statistics
 regressionSummary(valid_y, wine_lm_pred)
+
+#Backward elimination
+def train_model(variables):
+    model = LinearRegression()
+    model.fit(train_x[variables], train_y)
+    return model
+
+def score_model(model, variables):
+    return AIC_score(train_y, model.predict
+    (train_x[variables]), model)
+
+best_model, best_variables = backward_elimination(train_x.columns,
+                                                  train_model, score_model, verbose=True)
+
+print(best_variables)
