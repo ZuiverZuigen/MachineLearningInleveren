@@ -4,10 +4,12 @@ from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 import matplotlib.pylab as plt
+import dmba
 from dmba import plotDecisionTree, classificationSummary, regressionSummary
 
 #Select columns for regression analysis
-bank_df = pd.read_csv('UniversalBank.csv')
+bank_df = dmba.load_data('UniversalBank.csv')
+bank_df = bank_df.iloc[0:1000]
 
 predictors = ['Experience', 'Income', 'Family', 'CCAvg', 'Education', 'Personal Loan']
 
