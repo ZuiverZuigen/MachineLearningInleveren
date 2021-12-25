@@ -40,7 +40,7 @@ plt.xlabel('Age')  # set x-axis label
 plt.ylabel('Income')  # set y-axis label
 
 handles, labels = ax.get_legend_handles_labels()
-ax.set_xlim(40, 115)
+ax.set_xlim(0, 100)
 ax.legend(handles, labels, loc=4)
 
 plt.show()
