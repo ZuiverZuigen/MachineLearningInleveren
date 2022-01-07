@@ -55,3 +55,5 @@ bestClassTree = gridSearch.best_estimator_
 
 plotDecisionTree(bestClassTree, feature_names=train_X.columns)
 
+classificationSummary(train_y, bestClassTree.predict(train_X))
+classificationSummary(valid_y, bestClassTree.predict(valid_X))
