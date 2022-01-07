@@ -44,12 +44,12 @@ class Graph:
 
 
 g = Graph(7)
-g.addEdge(6, 8)
-g.addEdge(6, 4)
-g.addEdge(3, 7)
-g.addEdge(3, 10)
-g.addEdge(4, 7)
-g.addEdge(8, 8)
-g.addEdge(7, 8)
+g.addEdge('a', 'c')
+g.addEdge('a', 'f')
+g.addEdge('b', 'd')
+g.addEdge('b', 'e')
+g.addEdge('c', 'e')
+g.addEdge('f', 'g')
+g.addEdge('e', 'g')
 
 print("Following is a Topological Sort of the given graph", g.topologicalSort())
