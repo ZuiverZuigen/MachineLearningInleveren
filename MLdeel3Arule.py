@@ -5,7 +5,6 @@ import pandas as pd
 import matplotlib.pylab as plt
 from mlxtend.frequent_patterns import apriori
 from mlxtend.frequent_patterns import association_rules
-
 from surprise import Dataset, Reader, KNNBasic
 from surprise.model_selection import train_test_split
 
@@ -64,8 +63,14 @@ rules = rules[[len(c) == 1 for c in rules.consequents]]
 
 rules.sort_values(by=['lift'], ascending=False).head(10)
 
+# Convert thes data set into the format required by the surprise package
+# The columns must correspond to user id, item id and ratings (in that order)
+reader = Reader(rating_scale=(1, 5))
+#data = Dataset.load_from_df(type_cars[['Met_Color', 'Automatic', 'Mfr_Guarantee', 'BOVAG_Guarantee', 'ABS', 'Airbag_1', 'Airbag_2', 'Airco', 'Automatic_airco', 'Boardcomputer', 'CD_Player', 'Central_Lock', 'Powered_Windows', 'Power_Steering', 'Radio', 'Mistlamps', 'Sport_Model', 'Backseat_Divider', 'Metallic_Rim', 'Radio_cassette', 'Parking_Assistant', 'Tow_Bar']], reader)
+data = Dataset.load_from_df(type_cars[['Met_Color', 'Airco', 'Powered_Windows']], reader)
+
 # Split into training and test set
-trainset, testset = train_test_split(type_cars, test_size=.25, random_state=1)
+trainset, testset = train_test_split(data, test_size=0.25, random_state=1)
 
 ## User-based filtering
 # compute cosine similarity between users
@@ -106,3 +111,12 @@ for uid, user_ratings in list(top_n.items())[:5]:
     for prediction in user_ratings:
         print('  Item {0.iid} ({0.est:.2f})'.format(prediction), end='')
     print()
+
+## Build a model using the full dataset
+trainset = data.build_full_trainset()
+sim_options = {'name': 'cosine', 'user_based': False}
+algo = KNNBasic(sim_options=sim_options)
+algo.fit(trainset)
+
+# Predict rating for user 40 and item 4
+algo.predict(40, 4)
