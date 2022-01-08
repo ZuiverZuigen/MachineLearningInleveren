@@ -43,13 +43,26 @@ class Graph:
         print(stack)
 
 
-g = Graph(7)
-g.addEdge('a', 'c')
-g.addEdge('a', 'f')
-g.addEdge('b', 'd')
-g.addEdge('b', 'e')
-g.addEdge('c', 'e')
-g.addEdge('f', 'g')
-g.addEdge('e', 'g')
+thisdict = {
+    'a': 6,
+    'b': 3,
+    'c': 4,
+    'd': 10,
+    'e': 7,
+    'f': 8,
+    'g': 8
 
-print("Following is a Topological Sort of the given graph", g.topologicalSort())
+
+}
+
+g = Graph(7)
+g.addEdge(thisdict["a"], thisdict["c"])
+g.addEdge(thisdict["a"], thisdict["f"])
+g.addEdge(thisdict["b"], thisdict["d"])
+g.addEdge(thisdict["b"], thisdict["e"])
+g.addEdge(thisdict["c"], thisdict["e"])
+g.addEdge(thisdict["f"], thisdict["g"])
+g.addEdge(thisdict["e"], thisdict["g"])
+
+print("Following is a Topological Sort of the given graph")
+g.topologicalSort()
