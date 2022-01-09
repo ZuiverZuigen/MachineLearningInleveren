@@ -29,7 +29,7 @@ pharma_df_norm = pharma_df.apply(preprocessing.scale, axis=0)
 # pandas uses sample standard deviation
 pharma_df_norm = (pharma_df - pharma_df.mean())/pharma_df.std()
 
-# compute normalized distance based on Sales and Fuel Cost
+# compute normalized distance based on market cap and profit margin
 d_norm = pairwise.pairwise_distances(pharma_df_norm[['Market_Cap', 'Net_Profit_Margin']],
                                      metric='euclidean')
 pd.DataFrame(d_norm, columns=pharma_df.index, index=pharma_df.index).head(5)
