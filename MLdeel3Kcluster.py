@@ -69,7 +69,7 @@ plt.figure(figsize=(10,6))
 fig.subplots_adjust(right=3)
 ax = parallel_coordinates(centroids, class_column='cluster', colormap='Dark2', linewidth=5)
 plt.legend(loc='center left', bbox_to_anchor=(0.95, 0.5))
-plt.xlim(-0.5,7.5)
+plt.xlim(0,30)
 centroids
 pharma_df_norm.groupby(kmeans.labels_).mean()
 
