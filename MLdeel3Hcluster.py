@@ -9,7 +9,7 @@ from pandas.plotting import parallel_coordinates
 
 import dmba
 
-#load data
+#load data and preprocess
 pharma_df = dmba.load_data('Pharmaceuticals.csv')
 pharma_df.set_index('Name', inplace=True)
 ignore = ['Symbol', 'Median_Recommendation', 'Location', 'Exchange']
