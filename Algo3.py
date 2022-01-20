@@ -2,15 +2,21 @@
 from collections import defaultdict
 
 
+
+# List to keep track of the ticks needed
+tickList = [6]
+
 # Class to represent a graph
 class Graph:
     def __init__(self, vertices):
         self.graph = defaultdict(list)  # dictionary containing adjacency List
         self.V = vertices  # No. of vertices
 
+
     # function to add an edge to graph
-    def addEdge(self, u, v):
+    def addEdge(self, u, v, tick):
         self.graph[u].append(v)
+        tickList.append(tick)
 
     # A recursive function used by topologicalSort
     def topologicalSortUtil(self, v, visited, stack):
@@ -43,26 +49,18 @@ class Graph:
         print(stack)
 
 
-thisdict = {
-    'a': 6,
-    'b': 3,
-    'c': 4,
-    'd': 10,
-    'e': 7,
-    'f': 8,
-    'g': 8
+#g.addedge werkt als volgt, De eerste twee cijfers zijn de letters: A = 1, B = 2 Etc.
+#Het derde wat erachter staat is het aantal ticks die de knoop nodig heeft om te doorlopen.
 
-
-}
-
-g = Graph(7)
-g.addEdge(thisdict["a"], thisdict["c"])
-g.addEdge(thisdict["a"], thisdict["f"])
-g.addEdge(thisdict["b"], thisdict["d"])
-g.addEdge(thisdict["b"], thisdict["e"])
-g.addEdge(thisdict["c"], thisdict["e"])
-g.addEdge(thisdict["f"], thisdict["g"])
-g.addEdge(thisdict["e"], thisdict["g"])
+g = Graph(8)
+g.addEdge(1, 6, 6);
+g.addEdge(1, 3, 6);
+g.addEdge(2, 4, 3);
+g.addEdge(2, 5, 3);
+g.addEdge(3, 5, 7);
+g.addEdge(5, 7, 7);
+g.addEdge(6, 7, 8);
 
 print("Following is a Topological Sort of the given graph")
 g.topologicalSort()
+print('Following is the processing time of the given graph', sum(tickList))
