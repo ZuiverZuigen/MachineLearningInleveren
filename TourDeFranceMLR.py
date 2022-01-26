@@ -2,15 +2,16 @@ import heapq
 from collections import defaultdict
 
 import pandas as pd
-from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, Lasso, Ridge, LassoCV, BayesianRidge
+import statsmodels.formula.api as sm
 import matplotlib.pylab as plt
-from mlxtend.frequent_patterns import apriori
-from mlxtend.frequent_patterns import association_rules
-
-from surprise import Dataset, Reader, KNNBasic
-from surprise.model_selection import train_test_split
 
 import dmba
+from dmba import regressionSummary, exhaustive_search
+from dmba import backward_elimination, forward_selection, stepwise_selection
+from dmba import adjusted_r2_score, AIC_score, BIC_score
+
 
 #load and preproces the data set
 big2021_df = pd.read_csv (r'C:\Users\marwi\Desktop\data\results\Results2021CatWT.csv')
@@ -18,66 +19,30 @@ riderInfos_df = pd.read_csv(r'C:\Users\marwi\Desktop\data\rider_infos.csv')
 pd.set_option('max_columns', None)
 #print(big_df)
 
+riderInfos_df["pps"].str.replace(0, '')
+print(riderInfos_df.pps.head(20))
+
 #slice df tour de france
 Tour2021_df = big2021_df.loc[18397:22377]
-print(riderInfos_df)
 
+predictors = ['Rnk', 'Age', 'Stage_Type', 'Stage#']
+outcome = ''
 
-def get_top_n(predictions, n=20):
-    # First map the predictions to each user.
-    byUser = defaultdict(list)
-    for p in predictions:
-        byUser[p.uid].append(p)
+# partition data
+X = pd.get_dummies(Tour2021_df[predictors], drop_first=True)
+y = Tour2021_df[outcome]
+train_X, valid_X, train_y, valid_y = train_test_split(X, y, test_size=0.4, random_state=1)
 
-    # For each user, reduce predictions to top-n
-    for uid, userPredictions in byUser.items():
-        byUser[uid] = heapq.nlargest(n, userPredictions, key=lambda p: p.est)
-    return byUser
+tour_lm = LinearRegression()
+tour_lm.fit(train_X, train_y)
 
-# Convert thes data set into the format required by the surprise package
-reader = Reader(Rnk_scale=(181, 1))
-data = Dataset.load_from_df(Tour2021_df[['Stage#', 'RennerID', 'Rnk']], reader)
+pred_y = tour_lm.predict(train_X)
 
-# Split into training and test set
-trainset, testset = train_test_split(data, test_size=.25, random_state=1)
+# Use predict() to make predictions on a new set
+tour_lm_pred = tour_lm.predict(valid_X)
 
-## User-based filtering
-# compute cosine similarity between users
-sim_options = {'name': 'cosine', 'user_based': True}
-algo = KNNBasic(sim_options=sim_options)
-algo.fit(trainset)
+result = pd.DataFrame({'Predicted': tour_lm_pred, 'Actual': valid_y})
+print(result.head(20))
 
-# Than predict ratings for all pairs (u, i) that are NOT in the training set.
-predictions = algo.test(testset)
-
-top_n = get_top_n(predictions, n=15)
-
-# Print the recommended items for each user
-print()
-print('Top-4 recommended items for each user')
-for uid, user_ratings in list(top_n.items())[:16]:
-    print('User {}'.format(uid))
-    for prediction in user_ratings:
-        print('  Item {0.iid} ({0.est:.2f})'.format(prediction), end='')
-    print()
-print()
-
-## Item-based filtering
-# compute cosine similarity between users
-sim_options = {'name': 'cosine', 'user_based': False}
-algo = KNNBasic(sim_options=sim_options)
-algo.fit(trainset)
-
-# Than predict ratings for all pairs (u, i) that are NOT in the training set.
-predictions = algo.test(testset)
-top_n = get_top_n(predictions, n=15)
-
-# Print the recommended items for each user
-print()
-print('Top-4 recommended items for each user')
-for uid, user_ratings in list(top_n.items())[:16]:
-    print('User {}'.format(uid))
-    for prediction in user_ratings:
-        print('  Item {0.iid} ({0.est:.2f})'.format(prediction), end='')
-    print()
-
+# Compute common accuracy measures
+regressionSummary(valid_y, tour_lm_pred)
