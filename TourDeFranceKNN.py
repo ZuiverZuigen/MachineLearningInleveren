@@ -8,24 +8,27 @@ import matplotlib.pylab as plt
 import dmba
 
 # load and preproces the data set
-big2021_df = pd.read_csv(r'C:\Users\marwi\Desktop\data\results\Results2021CatWT.csv')
+#big2021_df = pd.read_csv(r'C:\Users\marwi\Desktop\data\results\Results2021CatWT.csv')
 riderInfos_df = pd.read_csv(r'C:\Users\marwi\Desktop\data\rider_infos.csv')
 pd.set_option('max_columns', None)
-print(big2021_df)
+#print(big2021_df)
 
 # vraag over hoe je dit nou precies doet
 riderInfos_df = riderInfos_df["pps"].str.replace('GC:', '')
-print(riderInfos_df.head(20))
+normalizedRiderInfos_df = pd.read_csv(r'C:\Users\marwi\Desktop\data\rider_infosManuela.csv')
+normalizedRiderInfos_df = normalizedRiderInfos_df.loc[:5]
+#print(riderInfos_df.head(20))
 
 # slice df tour de france
-Tour2021_df = big2021_df.loc[18397:22377]
+#Tour2021_df = big2021_df.loc[18397:22377]
 
 # split dataframe into train data and check data
 trainData, validData = train_test_split(normalizedRiderInfos_df, test_size=0.4, random_state=26)
 print(trainData.shape, validData.shape)
 
 # Vlakke etappe waar vluchters en sprinters de beste mogelijkheid hebben om te winnen
-Stage_1 = pd.DataFrame([{'Sprint': 10, 'Climber': 210}])
+# Er is voor gekozen om de Amstel Gold race te voorspellen
+Stage_1 = pd.DataFrame([{'Sprint': 6000, 'Climber': 6000}])
 
 #
 def plotDataset(ax, data, showLabel=True, **kwargs):
@@ -79,7 +82,7 @@ distances, indices = knn.kneighbors(Stage_Norm)
 print(trainNorm.iloc[indices[0], :])  # indices is a list of lists, we are only interested in the first element
 
 # Berg achtige etappe waar de kans groot is dat een klimmer of vluchter kan winnen
-Stage_2 = pd.DataFrame([{'Sprint': 10, 'Climber': 210}])
+Stage_2 = pd.DataFrame([{'Sprint': 6000, 'Climber': 6000}])
 
 #
 def plotDataset(ax, data, showLabel=True, **kwargs):
