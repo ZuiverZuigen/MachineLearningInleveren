@@ -59,10 +59,10 @@ scaler = preprocessing.StandardScaler()
 scaler.fit(normalizedRiderInfos_df[['Sprint', 'One_day_races']])
 
 # Transform the full dataset
-trainNorm = normalizedRiderInfos_df
+voorspelling = normalizedRiderInfos_df
 
 # Use k-nearest neighbour
 knn = NearestNeighbors(n_neighbors=15)
-knn.fit(trainNorm[['Sprint', 'One_day_races']])
+knn.fit(voorspelling[['Sprint', 'One_day_races']])
 distances, indices = knn.kneighbors(koers)
-print(trainNorm.iloc[indices[0], :])  # indices bestaat uit een lijst van lijsten, wij hoeven alleen de eerste elementen te hebben
+print(voorspelling.iloc[indices[0], :])  # indices bestaat uit een lijst van lijsten, wij hoeven alleen de eerste elementen te hebben
