@@ -14,7 +14,6 @@ riderInfos_df = pd.read_csv(r'C:\Users\marwi\Desktop\data\rider_infos.csv')
 pd.set_option('max_columns', None)
 
 # Create new columns derived from pps
-# Create dataframe where you'll store the dictionary values
 list = []
 for (i,r) in riderInfos_df.iterrows():
     e = r['pps']
@@ -28,19 +27,10 @@ for i in list:
     listdict.append(dict)
 
 
-
+# Create dataframe where the dictionary values are stored
 normalizedRiderInfos_df = pd.DataFrame(listdict)
 normalizedRiderInfos_df.rename(columns={'One day races': 'One_day_races'}, inplace=True)
 
-#print(big2021_df)
-# vraag over hoe je dit nou precies doet
-#riderInfos_df = riderInfos_df["pps"].str.replace('GC:', '')
-#normalizedRiderInfos_df = pd.read_csv(r'C:\Users\marwi\Desktop\data\rider_infosManuela.csv')
-#normalizedRiderInfos_df = normalizedRiderInfos_df.loc[:5]
-#print(riderInfos_df.head(20))
-
-# slice df tour de france
-#Tour2021_df = big2021_df.loc[18397:22377]
 
 # split dataframe into train data and check data
 trainData, validData = train_test_split(normalizedRiderInfos_df, test_size=0.4, random_state=26)
@@ -52,16 +42,9 @@ Stage_1 = pd.DataFrame([{'Sprint': 6000, 'One_day_races': 6000}])
 
 #
 def plotDataset(ax, data, showLabel=True, **kwargs):
- # subset = data.loc[data['Ownership']=='Owner']
- # ax.scatter(subset.Income, subset.Lot_Size, marker='o', label='Owner' if showLabel else None, color='C1', **kwargs)
-
-  # subset = data.loc[data['Ownership']=='Nonowner']
-    # ax.scatter(subset.Income, subset.Lot_Size, marker='D', label='Nonowner' if showLabel else None, color='C0', **kwargs)
-
     plt.xlabel('Sprint')  # set x-axis label
     plt.ylabel('One_day_races')  # set y-axis label
-#    for _, row in data.iterrows():
-#        ax.annotate(row.Number, (row.Income + 2, row.Lot_Size))
+
 fig, ax = plt.subplots()
 
 plotDataset(ax, trainData)
@@ -104,29 +87,18 @@ print(trainNorm.iloc[indices[0], :])  # indices is a list of lists, we are only 
 Stage_2 = pd.DataFrame([{'Climber': 6000, 'One_day_races': 6000}])
 
 #
-def plotDataset(ax, data, showLabel=True, **kwargs):
- #   subset = data.loc[data['Ownership']=='Owner']
- #   ax.scatter(subset.Income, subset.Lot_Size, marker='o', label='Owner' if showLabel else None, color='C1', **kwargs)
-
-  #  subset = data.loc[data['Ownership']=='Nonowner']
-    # ax.scatter(subset.Income, subset.Lot_Size, marker='D', label='Nonowner' if showLabel else None, color='C0', **kwargs)
+def plotDataset1(ax, data, showLabel=True, **kwargs):
 
     plt.xlabel('Climber')  # set x-axis label
     plt.ylabel('One_day_races')  # set y-axis label
-#    for _, row in data.iterrows():
-#        ax.annotate(row.Number, (row.Income + 2, row.Lot_Size))
+
 fig, ax = plt.subplots()
 
-plotDataset(ax, trainData)
-plotDataset(ax, validData, showLabel=False, facecolors='none')
+plotDataset1(ax, trainData)
+plotDataset1(ax, validData, showLabel=False, facecolors='none')
 
 ax.scatter(Stage_2.Sprint, Stage_2.One_day_races, marker='*', label='Stage 1', color='black', s=150)
 
-
-plt.xlabel('Climber')  # set x-axis label
-plt.ylabel('One_day_races')  # set y-axis label
-# for _, row in trainData.iterrows():
-#    ax.annotate(row.Number, (row.Sprint + 2, row.Climber))
 
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles, labels, loc=4)
