@@ -26,4 +26,5 @@ for i in list:
 
 
 normalizedRiderInfos_df = pd.DataFrame(listdict)
+normalizedRiderInfos_df = normalizedRiderInfos_df.rename(columns={'One day races': 'One_day_races'})
 print(normalizedRiderInfos_df.head(20))

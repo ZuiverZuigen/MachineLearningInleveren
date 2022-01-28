@@ -30,7 +30,7 @@ for i in list:
 
 
 normalizedRiderInfos_df = pd.DataFrame(listdict)
-normalizedRiderInfos_df.head(20)
+normalizedRiderInfos_df.rename(columns={'One day races': 'One_day_races'}, inplace=True)
 
 #print(big2021_df)
 # vraag over hoe je dit nou precies doet
@@ -48,7 +48,7 @@ print(trainData.shape, validData.shape)
 
 # Vlakke etappe waar vluchters en sprinters de beste mogelijkheid hebben om te winnen
 # Er is voor gekozen om de Amstel Gold race te voorspellen
-Stage_1 = pd.DataFrame([{'Sprint': 6000, 'One day races': 6000}])
+Stage_1 = pd.DataFrame([{'Sprint': 6000, 'One_day_races': 6000}])
 
 #
 def plotDataset(ax, data, showLabel=True, **kwargs):
@@ -59,7 +59,7 @@ def plotDataset(ax, data, showLabel=True, **kwargs):
     # ax.scatter(subset.Income, subset.Lot_Size, marker='D', label='Nonowner' if showLabel else None, color='C0', **kwargs)
 
     plt.xlabel('Sprint')  # set x-axis label
-    plt.ylabel('One day races')  # set y-axis label
+    plt.ylabel('One_day_races')  # set y-axis label
 #    for _, row in data.iterrows():
 #        ax.annotate(row.Number, (row.Income + 2, row.Lot_Size))
 fig, ax = plt.subplots()
@@ -67,11 +67,11 @@ fig, ax = plt.subplots()
 plotDataset(ax, trainData)
 plotDataset(ax, validData, showLabel=False, facecolors='none')
 
-ax.scatter(Stage_1.Sprint, Stage_1.ODR, marker='*', label='Stage 1', color='black', s=150)
+ax.scatter(Stage_1.Sprint, Stage_1.One_day_races, marker='*', label='Stage 1', color='black', s=150)
 
 
 plt.xlabel('Sprint')  # set x-axis label
-plt.ylabel('One day races')  # set y-axis label
+plt.ylabel('One_day_races')  # set y-axis label
 # for _, row in trainData.iterrows():
 #    ax.annotate(row.Number, (row.Sprint + 2, row.Climber))
 
@@ -82,7 +82,7 @@ plt.show()
 
 # fit scaler
 scaler = preprocessing.StandardScaler()
-scaler.fit(trainData[['Sprint', 'One day races']])
+scaler.fit(trainData[['Sprint', 'One_day_races']])
 
 # Transform the full dataset
 # mowerNorm = pd.concat([pd.DataFrame(scaler.transform(mower_df[['Income', 'Lot_Size']]),
@@ -92,17 +92,16 @@ trainNorm = normalizedRiderInfos_df.iloc[trainData.index]
 validNorm = normalizedRiderInfos_df.iloc[validData.index]
 
 # normalise stages
-Stage_Norm = pd.DataFrame(scaler.transform(Stage_1), columns=['zSprint', 'zOne_day_races'])
+Stage_Norm = pd.concat([pd.DataFrame(scaler.transform(normalizedRiderInfos_df[['Sprint', 'One_day_races']]), columns=['zSprint', 'zOne_day_races'])])
 
 # Use k-nearest neighbour
 knn = NearestNeighbors(n_neighbors=15)
-knn = NearestNeighbors(n_neighbors=3)
 knn.fit(trainNorm[['zSprint', 'zOne_day_races']])
 distances, indices = knn.kneighbors(Stage_Norm)
 print(trainNorm.iloc[indices[0], :])  # indices is a list of lists, we are only interested in the first element
 
 # Berg achtige etappe waar de kans groot is dat een klimmer of vluchter kan winnen
-Stage_2 = pd.DataFrame([{'Climber': 6000, 'One day races': 6000}])
+Stage_2 = pd.DataFrame([{'Climber': 6000, 'One_day_races': 6000}])
 
 #
 def plotDataset(ax, data, showLabel=True, **kwargs):
@@ -113,7 +112,7 @@ def plotDataset(ax, data, showLabel=True, **kwargs):
     # ax.scatter(subset.Income, subset.Lot_Size, marker='D', label='Nonowner' if showLabel else None, color='C0', **kwargs)
 
     plt.xlabel('Climber')  # set x-axis label
-    plt.ylabel('One day races')  # set y-axis label
+    plt.ylabel('One_day_races')  # set y-axis label
 #    for _, row in data.iterrows():
 #        ax.annotate(row.Number, (row.Income + 2, row.Lot_Size))
 fig, ax = plt.subplots()
@@ -121,11 +120,11 @@ fig, ax = plt.subplots()
 plotDataset(ax, trainData)
 plotDataset(ax, validData, showLabel=False, facecolors='none')
 
-ax.scatter(Stage_2.Sprint, Stage_2.ODR, marker='*', label='Stage 1', color='black', s=150)
+ax.scatter(Stage_2.Sprint, Stage_2.One_day_races, marker='*', label='Stage 1', color='black', s=150)
 
 
 plt.xlabel('Climber')  # set x-axis label
-plt.ylabel('One day races')  # set y-axis label
+plt.ylabel('One_day_races')  # set y-axis label
 # for _, row in trainData.iterrows():
 #    ax.annotate(row.Number, (row.Sprint + 2, row.Climber))
 
@@ -136,7 +135,7 @@ plt.show()
 
 # fit scaler
 scaler = preprocessing.StandardScaler()
-scaler.fit(trainData[['Climber', 'One day races']])
+scaler.fit(trainData[['Climber', 'One_day_races']])
 
 # Transform the full dataset
 # mowerNorm = pd.concat([pd.DataFrame(scaler.transform(mower_df[['Income', 'Lot_Size']]),
