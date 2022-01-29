@@ -65,4 +65,11 @@ voorspelling = normalizedRiderInfos_df
 knn = NearestNeighbors(n_neighbors=15)
 knn.fit(voorspelling[['Sprint', 'One_day_races']])
 distances, indices = knn.kneighbors(koers)
-print(voorspelling.iloc[indices[0], :])  # indices bestaat uit een lijst van lijsten, wij hoeven alleen de eerste elementen te hebben
+voorspelling.iloc[indices[0],:]  # indices bestaat uit een lijst van lijsten, wij hoeven alleen de eerste elementen te hebben
+
+# print wielernaam
+def drukAf():
+    print("De top 15 renners die kans kans maken om een vlakke koers te winnen: ")
+    for i in indices[0]:
+        print(riderInfos_df.iat[i,1])
+drukAf()
